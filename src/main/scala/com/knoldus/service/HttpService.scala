@@ -1,10 +1,8 @@
-package service
+package com.knoldus.service
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
-
 import akka.stream.ActorMaterializer
-
 
 
 object HttpService extends App with Routes    {
@@ -14,5 +12,7 @@ object HttpService extends App with Routes    {
 
   implicit val dispatcher= system.dispatcher
 
-  Http().bindAndHandle(routes, "localhost", 9000)
+  Http().bindAndHandle(routes, "0.0.0.0", 9000)
+
+  println("Server up and running...")
 }

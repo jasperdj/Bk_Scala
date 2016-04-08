@@ -1,25 +1,11 @@
 package com.knoldus.db
 
 import reactivemongo.api._
-import reactivemongo.api.collections.bson.BSONCollection
 import reactivemongo.api.commands.WriteResult
-import reactivemongo.bson.BSONDocument
-import reactivemongo.core.commands.LastError
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.{Await, Future}
-import scala.util.{Success, Failure}
-
-// BSON implementation of the count command
 import reactivemongo.api.commands.bson.BSONCountCommand.{ Count, CountResult }
-
 import reactivemongo.api.commands.bson.BSONCountCommandImplicits._
-
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import play.api.libs.iteratee.Iteratee
-
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.bson.BSONCollection
 
@@ -82,25 +68,4 @@ object Database {
 
     fields
   }
-
-  /*
-  def findAllTickers(): Future[List[BSONDocument]] = {
-    val query = BSONDocument()
-    val filter = BSONDocument("Company" -> 1, "Country" -> 1, "Ticker" -> 1)
-
-    // which results in a Future[List[BSONDocument]]
-    Database.collection
-      .find(query, filter)
-      .cursor[BSONDocument]
-      .collect[List]()
-  }
-
-  def findTicker(ticker: String) : Future[Option[BSONDocument]] = {
-    val query = BSONDocument("Ticker" -> ticker)
-
-    Database.collection
-      .find(query)
-      .one
-  }*/
-
 }
