@@ -1,5 +1,5 @@
 # Bk_Scala
-This console-based application is part of my thesis research at Atos. This application is used to benchmark performance and scalability differences between the Java and Scala version. 
+This console-based application is part of my thesis research at Atos. This application is used to benchmark performance and scalability differences between the Java and Scala/Akka technology stacks. 
 
 My whole thesis research includes
 - Bk_Scala: Scala/Akka version of the Bk use case. 
