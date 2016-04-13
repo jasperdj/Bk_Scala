@@ -19,14 +19,14 @@ libraryDependencies ++=  Seq(
   "com.typesafe.akka" %% "akka-http-testkit-experimental" % "2.0.3" %    "test",
   "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
   "org.reactivemongo" %% "reactivemongo" % "0.11.10",
-  "ch.qos.logback" % "logback-classic" % "1.1.2"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
 )
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
 resolvers += "Typesafe" at "https://repo.typesafe.com/typesafe/releases/"
 
-mainClass in assembly := some("com.knoldus.service.HttpService")
+mainClass in assembly := some("com.service.HttpService")
 assemblyJarName := "runnableNode.jar"
 
 assemblyMergeStrategy in assembly := {

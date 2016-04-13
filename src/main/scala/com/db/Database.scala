@@ -1,5 +1,6 @@
-package com.knoldus.db
+package com.db
 
+import com.routeHelpers.EventData
 import reactivemongo.api._
 import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.commands.bson.BSONCountCommand.{ Count, CountResult }
@@ -22,8 +23,8 @@ object Database {
     db.collection("Events")
   }
 
-  def insertEvent(spaceId:Int, messageId:Int, eventType:Int) : Future[WriteResult] = {
-    val query = BSONDocument("spaceId" -> spaceId, "messageId" -> messageId, "eventType" -> eventType)
+  def insertEvent(e: EventData) : Future[WriteResult] = {
+    val query = BSONDocument("spaceId" -> e.spaceId, "messageId" -> e.messageId, "eventType" -> e.eventType)
 
     Database.collection
       .insert(query)
@@ -32,7 +33,7 @@ object Database {
   /*
     @return messages created, messages deleted.
    */
-  def getSpaceStats(spaceId:Int) : Future[(CountResult, CountResult)] = {
+  def getSpaceStats[T](spaceId:Int) : Future[Int] = {
 
     val getCreatedQuery = BSONDocument("spaceId" -> spaceId, "eventType" -> 1)
     val getDeletedQuery = BSONDocument("spaceId" -> spaceId, "eventType" -> 2)
@@ -43,15 +44,15 @@ object Database {
     val commandDeleted = Count(getDeletedQuery)
     val resultDeleted: Future[CountResult] = collection.runCommand(commandDeleted)
 
-    val fields = for{
+    val field = for{
       f1Result <- resultCreated
       f2Result <- resultDeleted
-    } yield (f1Result, f2Result)
+    } yield f1Result.value - f2Result.value
 
-    fields
+    field
   }
 
-  def getMessageStats(messageId:Int) : Future[(CountResult, CountResult)] = {
+  def getMessageStats(messageId:Int) : Future[Int] = {
     val getLikeQuery = BSONDocument("messageId" -> messageId, "eventType" -> 4)
     val getUnlikeQuery = BSONDocument("messageId" -> messageId, "eventType" -> 5)
 
@@ -61,11 +62,11 @@ object Database {
     val commandUnlikes = Count(getUnlikeQuery)
     val resultUnlikes: Future[CountResult] = collection.runCommand(commandUnlikes)
 
-    val fields = for{
+    val field = for{
       f1Result <- resultLikes
       f2Result <- resultUnlikes
-    } yield (f1Result, f2Result)
+    } yield f1Result.value - f2Result.value
 
-    fields
+    field
   }
 }

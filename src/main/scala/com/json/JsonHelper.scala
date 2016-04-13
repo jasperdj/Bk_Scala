@@ -1,4 +1,4 @@
-package com.knoldus.json
+package com.json
 
 import net.liftweb.json.{DefaultFormats, JNothing, JValue, Serialization, parse => liftParser}
 
