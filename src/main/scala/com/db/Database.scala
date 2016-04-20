@@ -30,9 +30,6 @@ object Database {
       .insert(query)
   }
 
-  /*
-    @return messages created, messages deleted.
-   */
   def getSpaceStats[T](spaceId:Int) : Future[Int] = {
 
     val getCreatedQuery = BSONDocument("spaceId" -> spaceId, "eventType" -> 1)
