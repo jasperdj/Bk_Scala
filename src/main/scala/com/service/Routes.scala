@@ -16,8 +16,9 @@ trait Routes extends JsonHelper {
     path("bk_scala" / "insert") {
       post {
         entity(as[String]) { json =>
+          println(json)
           val event = parse(json).extract[EventData]
-          val routeRequest = new RouteRequest(json, Database.insertEvent(event))
+          val routeRequest = new RouteRequest(json, Database.insertEvent(event), "Insert")
 
           onComplete(routeRequest.waitingOperations) {
             case Success(results) => complete {
@@ -34,7 +35,7 @@ trait Routes extends JsonHelper {
       post {
         entity(as[String]) { json =>
           val space = parse(json).extract[SpaceData]
-          val routeRequest = new RouteRequest(json, Database.getSpaceStats(space.spaceId))
+          val routeRequest = new RouteRequest(json, Database.getSpaceStats(space.spaceId), "spaceStatistics")
 
           onComplete(routeRequest.waitingOperations) {
             case Success(results) => complete {
@@ -51,7 +52,7 @@ trait Routes extends JsonHelper {
       post {
         entity(as[String]) { json =>
           val message = parse(json).extract[MessageData]
-          val routeRequest = new RouteRequest(json, Database.getMessageStats(message.messageId))
+          val routeRequest = new RouteRequest(json, Database.getMessageStats(message.messageId), "messageStatistics")
 
           onComplete(routeRequest.waitingOperations) {
             case Success(results) => complete {
@@ -68,5 +69,5 @@ trait Routes extends JsonHelper {
 }
 
 //curl --data "{\"totalExceptions\":0 ,\"id\":5 }" http://127.0.0.1:9000/bk_scala_up/update
-//curl --data "{\"spaceId\":5, \"messageId\": 5, \"eventType\": 5, \"nodeId\":1, \"forceException\": false}" http://127.0.0.1:9000/bk_scala/insert
+//curl --data "{\"spaceId\":5, \"messageId\": 5, \"eventType\": 5, \"nodeId\":1, \"forceException\": false}" http://raspberrypi.mshome.net:9000/bk_scala/insert
 //curl --data "{\"spaceId\":5, \"nodeId\":1, \"forceException\": false}" http://127.0.0.1:9000/bk_scala/spaceStatistics
