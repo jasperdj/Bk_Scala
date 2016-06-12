@@ -1,7 +1,9 @@
-import scala.concurrent._
+package testArea
+
+import com.db.Database
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
-import com.knoldus.db.Database
 
 
 

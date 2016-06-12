@@ -1,16 +1,75 @@
 package com.service
 
+import akka.http.scaladsl.model.{StatusCodes, HttpResponse}
 import akka.http.scaladsl.server.Directives._
 import com.json.JsonHelper
 import com.db._
 import com.routeHelpers.{RouteRequest, MessageData, SpaceData, EventData}
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
-import scala.util.{Failure, Success}
+import scala.collection.mutable.ListBuffer
+import scala.concurrent.Future
+import scala.util.{Random, Failure, Success}
+
+//DELETE THIS
+import scala.concurrent.ExecutionContext.Implicits.global
 
 trait Routes extends JsonHelper {
 
   val logger = Logger(LoggerFactory.getLogger("routeLog"))
+
+  val random = new Random
+  val iterations = 100000
+  val routes2 = {
+    path("NOTHING") {
+      get {
+          complete {
+            HttpResponse(StatusCodes.OK, entity = "Succes")
+          }
+      }
+    } ~
+      path("CPU") {
+        get {
+          val future = Future {
+            for (i <- 0 to iterations * 2) {
+              Math.sqrt(random.nextDouble * i)
+              Math.abs(random.nextDouble / i)
+              Math.tan(random.nextDouble - 1)
+            }
+          }
+          onComplete(future) {
+            case Success(results) => complete {
+              HttpResponse(StatusCodes.OK, entity = "Succes")
+            }
+            case Failure(error) => complete {
+              HttpResponse(StatusCodes.InternalServerError, entity = "failure")
+            }
+          }
+        }
+      } ~ path("MEMORY") {
+      get {
+        val future = Future {
+          var list = ListBuffer[String]()
+          var list2 = ListBuffer[ListBuffer[String]]()
+          for (i <- 0 to iterations) {
+            list += "qwertytuyiopsadfghjklzxcvbnm"
+          }
+          for (i <- 0 to iterations) {
+            list2 += list
+          }
+        }
+
+        onComplete(future) {
+          case Success(results) => complete {
+            HttpResponse(StatusCodes.OK, entity = "Succes")
+          }
+          case Failure(error) => complete {
+            HttpResponse(StatusCodes.InternalServerError, entity = "failure")
+          }
+        }
+      }
+    }
+  }
 
   val routes = {
     path("bk_scala" / "insert") {

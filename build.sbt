@@ -17,8 +17,12 @@ libraryDependencies ++=  Seq(
   "com.typesafe.akka" %% "akka-http-testkit-experimental" % "2.0.3" %    "test",
   "org.scalacheck" %% "scalacheck" % "1.12.5" % "test",
   "org.reactivemongo" %% "reactivemongo" % "0.11.10",
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0",
+  "org.scalacheck" %% "scalacheck" % "1.13.0" % "test",
+  "org.scalamock" %% "scalamock-scalatest-support" % "3.2.2" % "test"
 )
+
+testOptions in Test += Tests.Argument("-oD")
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 

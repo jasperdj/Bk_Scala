@@ -1,4 +1,6 @@
-import akka.actor.{ Actor, ActorRef, Props, ActorSystem }
+package testArea
+
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 
 import scala.concurrent.Await
 
@@ -54,17 +56,18 @@ class WordCounterActor(filename: String) extends Actor {
 
 object Sample extends App {
 
-  import akka.util.Timeout
-  import scala.concurrent.duration._
-  import akka.pattern.ask
   import akka.dispatch.ExecutionContexts._
+  import akka.pattern.ask
+  import akka.util.Timeout
+
+  import scala.concurrent.duration._
   implicit val ec = global
 
   override def main(args: Array[String]) {
     val system = ActorSystem("System")
     val actor = system.actorOf(Props(new WordCounterActor("C:\\Users\\a623557\\IdeaProjects\\firstRunnable\\src\\main\\text.txt")))
     implicit val timeout = Timeout(25 seconds)
-    def future = actor ? StartProcessFileMsg()
+    val future = actor ? StartProcessFileMsg()
 
     val result = Await.result(future, timeout.duration).asInstanceOf[Int]
     println(result.toString)

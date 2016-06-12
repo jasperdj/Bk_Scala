@@ -6,12 +6,12 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.commands.bson.BSONCountCommand.{ Count, CountResult }
 import reactivemongo.api.commands.bson.BSONCountCommandImplicits._
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+//import scala.concurrent.ExecutionContext.Implicits.global
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.bson.BSONCollection
+import com.concurrent.ExecutionContext.IO.dbOperations
 
 object Database {
-
   val collection = connect()
 
   def connect(): BSONCollection = {
@@ -23,15 +23,18 @@ object Database {
     db.collection("Events")
   }
 
+  def dropCollection : Future[Boolean] = {
+    val future = Database.collection.drop(false)
+    Database.collection.create()
+    future
+  }
+
   def insertEvent(e: EventData) : Future[WriteResult] = {
     val query = BSONDocument("spaceId" -> e.spaceId, "messageId" -> e.messageId, "eventType" -> e.eventType)
-
-    Database.collection
-      .insert(query)
+    Database.collection.insert(query)
   }
 
   def getSpaceStats[T](spaceId:Int) : Future[Int] = {
-
     val getCreatedQuery = BSONDocument("spaceId" -> spaceId, "eventType" -> 1)
     val getDeletedQuery = BSONDocument("spaceId" -> spaceId, "eventType" -> 2)
 

@@ -26,6 +26,7 @@ object Monitor {
   system.scheduler.schedule(0 seconds, 5 seconds, resourceMonitor, update)
 }
 
+
 class CPU_Monitor extends Actor {
   var latestCpuLoad = -1.0
   var latestRamUsed = -1.0
