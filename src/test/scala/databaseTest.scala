@@ -20,21 +20,13 @@ import reactivemongo.bson.BSONDocument
 
 class databaseTest extends FunSuite with Matchers with ScalaFutures {
 
-  def time[T](str: String)(thunk: => T): T = {
-    print(str + "... ")
-    val t1 = System.currentTimeMillis
-    val x = thunk
-    val t2 = System.currentTimeMillis
-    println((t2 - t1) + " msecs")
-    x
-  }
-
   test("The database driver should have a collection") {
       Database.collection shouldBe a [BSONCollection]
   }
 
   test("Database should be empty after dropping the collection") {
     Await.result(Database.dropCollection, 2 seconds)
+    Database.collection.create()
     val stats = Database.collection.stats
     val result = Await.result(stats, 2 seconds)
     result.count shouldBe 0

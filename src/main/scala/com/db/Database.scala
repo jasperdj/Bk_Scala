@@ -6,6 +6,8 @@ import reactivemongo.api.commands.WriteResult
 import reactivemongo.api.commands.bson.BSONCountCommand.{ Count, CountResult }
 import reactivemongo.api.commands.bson.BSONCountCommandImplicits._
 import scala.concurrent.Future
+import scala.util.{Failure, Success}
+
 //import scala.concurrent.ExecutionContext.Implicits.global
 import reactivemongo.bson.BSONDocument
 import reactivemongo.api.collections.bson.BSONCollection
@@ -24,9 +26,7 @@ object Database {
   }
 
   def dropCollection : Future[Boolean] = {
-    val future = Database.collection.drop(false)
-    Database.collection.create()
-    future
+    Database.collection.drop(false)
   }
 
   def insertEvent(e: EventData) : Future[WriteResult] = {
