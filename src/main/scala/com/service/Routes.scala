@@ -28,25 +28,39 @@ trait Routes extends JsonHelper {
           }
       }
     } ~
-      path("CPU") {
-        get {
-          val future = Future {
-            for (i <- 0 to iterations * 2) {
-              Math.sqrt(random.nextDouble * i)
-              Math.abs(random.nextDouble / i)
-              Math.tan(random.nextDouble - 1)
-            }
-          }
-          onComplete(future) {
-            case Success(results) => complete {
-              HttpResponse(StatusCodes.OK, entity = "Succes")
-            }
-            case Failure(error) => complete {
-              HttpResponse(StatusCodes.InternalServerError, entity = "failure")
-            }
+    path("CPU_async") {
+      get {
+        val future = Future {
+          for (i <- 0 to iterations * 2) {
+            Math.sqrt(random.nextDouble * i)
+            Math.abs(random.nextDouble / i)
+            Math.tan(random.nextDouble - 1)
           }
         }
-      } ~ path("MEMORY") {
+        onComplete(future) {
+          case Success(results) => complete {
+            HttpResponse(StatusCodes.OK, entity = "Succes")
+          }
+          case Failure(error) => complete {
+            HttpResponse(StatusCodes.InternalServerError, entity = "failure")
+          }
+        }
+      }
+    }~
+    path("CPU") {
+      get {
+        complete {
+          for (i <- 0 to iterations * 2) {
+            Math.sqrt(random.nextDouble * i)
+            Math.abs(random.nextDouble / i)
+            Math.tan(random.nextDouble - 1)
+          }
+
+          HttpResponse(StatusCodes.OK, entity = "Succes")
+        }
+      }
+    } ~
+    path("MEMORY_async") {
       get {
         val future = Future {
           var list = ListBuffer[String]()
@@ -68,8 +82,26 @@ trait Routes extends JsonHelper {
           }
         }
       }
+    } ~
+    path("MEMORY") {
+      get {
+        complete {
+          var list = ListBuffer[String]()
+          var list2 = ListBuffer[ListBuffer[String]]()
+          for (i <- 0 to iterations) {
+            list += "qwertytuyiopsadfghjklzxcvbnm"
+          }
+          for (i <- 0 to iterations) {
+            list2 += list
+          }
+
+          HttpResponse(StatusCodes.OK, entity = "Succes")
+        }
+      }
     }
   }
+
+
 
   val routes = {
     path("bk_scala" / "insert") {

@@ -21,20 +21,6 @@ object HttpService extends App with Routes    {
   val customSettings = ServerSettings(system).copy(maxConnections = 50000)
   Http().bindAndHandle(routes, "0.0.0.0", 9000, customSettings)
 
-
-
-  //Http().bindAndHandleSync(requestHandler, "0.0.0.0", 8080)
-
-  /*val flowBufferingElements = Flow[HttpRequest].buffer(1000, OverflowStrategy.backpressure) // back-pressures the source if the buffer is full
-
-  //Http().bind("0.0.0.0", 9000).via(flowBufferingElements).toMat(requestHandler)
-
- val requestHandler: HttpRequest => HttpResponse = {
-   case HttpRequest(GET, Uri.Path("/test"), _, _, _) => HttpResponse(200, entity = "It works!")
-
- }*/
-
-
   println("Server up and running...")
 
   Monitor
